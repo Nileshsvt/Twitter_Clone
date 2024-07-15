@@ -1,4 +1,4 @@
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
 export const protectRoute=async(req,res,next)=>{
@@ -8,8 +8,8 @@ export const protectRoute=async(req,res,next)=>{
             return res.status(401).json({error:"Unauthorized: No Token provided"});
         }
 
-        const decoded=jwt.verify(process.env.JWT_SECRET);
-        if(!decoded){
+        const decoded=jwt.verify(token,process.env.JWT_SECRET);
+        if(!decoded || !decoded.userId){
             return res.status(401).json({error:"Unauthorized: Invalid Token"});
         }
 
@@ -22,7 +22,7 @@ export const protectRoute=async(req,res,next)=>{
         next();
         
     } catch (error) {
-        console.log("Error in protectRoute middleware",error.message);
+        console.log("Error in protectRoute middleware",error);
          return res.status(500).json({error:"Internal server error"});
     }
-}
+};

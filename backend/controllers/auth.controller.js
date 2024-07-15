@@ -1,5 +1,5 @@
-import { generateTokenAndSetCookie } from "../lib/utils/generateToken";
-import User from "../models/user.model";
+import { generateTokenAndSetCookie } from "../lib/utils/generateToken.js";
+import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
 export const signup= async (req,res)=>{
@@ -56,11 +56,11 @@ export const signup= async (req,res)=>{
             });
         }
         else{
-            res.status(400).json({error:"invalid user data"});
+            return res.status(400).json({error:"invalid user data"});
         }
 
     } catch (error) {
-        console.log("Error in signup controller",error.message);
+        console.log("Error in signup controller",error);
         res.status(500).json({error:"Internal Server Error"});
     }
 };
