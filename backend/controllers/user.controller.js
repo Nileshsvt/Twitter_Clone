@@ -26,7 +26,7 @@ export const followUnfollowUser= async(req,res)=>{
         const userToodify=await User.findById(id);
         const currentUser=await User.findById(req.user._id); 
 
-        if(id===req.uuser._id.toString()){
+        if(id===req.user._id.toString()){
             return res.status(400).json({error:"You can't follow/unfollow yourself"});
         }
         if(!userToodify || !currentUser){
@@ -70,21 +70,22 @@ export const getSuggestedUsers= async(req,res)=>{
     try {
         const userId=req.user._id;
 
-        const userFollowedByMe=await User.findById(userId).select("following");
+        const usersFollowedByMe =await User.findById(userId).select("following");
 
         const users=await User.aggregate([
             {
                 $match:{
-                    id:{$ne:userId},
+                    _id:{$ne:userId},
                 }
             },
             {$sample:{size:10}},
         ]);
 
-        const filteredUsers=users.filter(user=>!usersFollowedByMe.following.includes(user._id) );
+        const filteredUsers=users.filter((user)=>!usersFollowedByMe.following.includes(user._id) );
+        console.log(req.user._id);
         const suggestedUsers=filteredUsers.slice(0,4);
 
-        suggestedUsers.forEach(user=>user.password==null);
+        suggestedUsers.forEach((user)=>(user.password=null));
 
         res.status(200).json(suggestedUsers);
         
