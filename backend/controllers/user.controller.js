@@ -120,6 +120,7 @@ export const updateUser= async(req,res)=>{
 
             const salt=await bcrypt.genSalt(10);
             user.password=await bcrypt.hash(newPassword,salt);
+        }
 
             if(profileImg){
                 if(user.profileImg){
@@ -149,9 +150,9 @@ export const updateUser= async(req,res)=>{
             
             user.password=null;
             return res.status(200).json(user);
-        }
+        
     } catch (error) {
         console.log("error in updateUser: ",error.message);
         res.status(500).json({error:error.message});
     }
-}
+};
